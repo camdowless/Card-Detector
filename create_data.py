@@ -129,15 +129,14 @@ xml_object=""" <object>
 xml_body_2="""</annotation>        
 """
 
-def create_voc_xml(xml_file, img_file, listbba, display=False):
-    with open(xml_file, "w") as f:
+def create_voc_xml(xml_file, img_file,listbba,display=False):
+
+    with open(xml_file,"w") as f:
         f.write(xml_body_1.format(**{'FILENAME':os.path.basename(img_file), 'PATH':img_file,'WIDTH':data.imgW,'HEIGHT':data.imgH}))
         for bba in listbba:
-            f.write(xml_object.format(
-                **{'CLASS': bba.classname, 'XMIN': bba.x1, 'YMIN': bba.y1, 'XMAX': bba.x2, 'YMAX': bba.y2}))
-            f.write(xml_body_2)
-            if display:
-                print("New XML: ", xml_file)
+            f.write(xml_object.format(**{'CLASS':bba.classname,'XMIN':bba.x1,'YMIN':bba.y1,'XMAX':bba.x2,'YMAX':bba.y2}))
+        f.write(xml_body_2)
+        if display: print("New xml",xml_file)
 
 
 

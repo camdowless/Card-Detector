@@ -2,8 +2,9 @@ import hickle
 import cv2
 import os
 from glob import glob
-import random
 import hull as h
+import random
+import data
 
 
 card_suits=['s','h','d','c']
@@ -82,11 +83,11 @@ def saveToHickle():
             cards[card_name] = []
             for f in glob(card_dir + "/*.JPG"):
                 img = cv2.imread(f, cv2.IMREAD_UNCHANGED)
-                hullHL = h.findHull(img, h.refCornerHL, debug="no")
+                hullHL = h.findHull(img, data.refCornerHL, debug="no")
                 if hullHL is None:
                     print(f"File {f} not used.")
                     continue
-                hullLR = h.findHull(img, h.refCornerLR, debug="no")
+                hullLR = h.findHull(img, data.refCornerLR, debug="no")
                 if hullLR is None:
                     print(f"File {f} not used.")
                     continue
@@ -130,7 +131,7 @@ xml_body_2="""</annotation>
 
 def create_voc_xml(xml_file, img_file, listbba, display=False):
     with open(xml_file, "w") as f:
-        f.write(xml_body_1.format(**{'FILENAME':os.path.basename(img_file), 'PATH':img_file,'WIDTH':h.imgW,'HEIGHT':h.imgH}))
+        f.write(xml_body_1.format(**{'FILENAME':os.path.basename(img_file), 'PATH':img_file,'WIDTH':data.imgW,'HEIGHT':data.imgH}))
         for bba in listbba:
             f.write(xml_object.format(
                 **{'CLASS': bba.classname, 'XMIN': bba.x1, 'YMIN': bba.y1, 'XMAX': bba.x2, 'YMAX': bba.y2}))

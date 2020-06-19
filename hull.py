@@ -4,36 +4,10 @@ import matplotlib.patches as patches
 import cv2
 from glob import glob
 import numpy as np
+import data
 
 
-cardW=64
-cardH=89
-cornerXmin=1.5
-cornerXmax=9.5
-cornerYmin=2.5
-cornerYmax=23
-
-zoom=4
-cardW*=zoom
-cardH*=zoom
-cornerXmin=int(cornerXmin*zoom)
-cornerXmax=int(cornerXmax*zoom)
-cornerYmin=int(cornerYmin*zoom)
-cornerYmax=int(cornerYmax*zoom)
-
-# imgW,imgH: dimensions of the generated dataset images
-imgW=720
-imgH=720
-
-refCard=np.array([[0,0],[cardW,0],[cardW,cardH],[0,cardH]],dtype=np.float32)
-refCardRot=np.array([[cardW,0],[cardW,cardH],[0,cardH],[0,0]],dtype=np.float32)
-refCornerHL=np.array([[cornerXmin,cornerYmin],[cornerXmax,cornerYmin],[cornerXmax,cornerYmax],[cornerXmin,cornerYmax]],dtype=np.float32)
-refCornerLR=np.array([[cardW-cornerXmax,cardH-cornerYmax],[cardW-cornerXmin,cardH-cornerYmax],[cardW-cornerXmin,cardH-cornerYmin],[cardW-cornerXmax,cardH-cornerYmin]],dtype=np.float32)
-refCorners=np.array([refCornerHL,refCornerLR])
-
-
-
-def findHull(img, corner = refCornerHL, debug = False):
+def findHull(img, corner = data.refCornerHL, debug = False):
     """
             Find in the zone 'corner' of image 'img' and return, the convex hull delimiting
             the value and suit symbols
@@ -171,7 +145,7 @@ def testDimensions():
     imgs_fns = glob(imgs_dir + "/*.JPG")
     for _ in range(0, 10):
         img_fn = random.choice(imgs_fns)
-        display_img(cv2.imread(img_fn, cv2.IMREAD_UNCHANGED), polygons=[refCornerHL, refCornerLR])
+        display_img(cv2.imread(img_fn, cv2.IMREAD_UNCHANGED), polygons=[data.refCornerHL, data.refCornerLR])
 
 
 def testHull():
@@ -182,8 +156,8 @@ def testHull():
     print(img_fn)
     img=cv2.imread(img_fn,cv2.IMREAD_UNCHANGED)
 
-    hullHL=findHull(img,refCornerHL,debug=debug)
-    hullLR=findHull(img,refCornerLR,debug=debug)
-    display_img(img,[refCornerHL,refCornerLR,hullHL,hullLR])
+    hullHL=findHull(img,data.refCornerHL,debug=debug)
+    hullLR=findHull(img,data.refCornerLR,debug=debug)
+    display_img(img,[data.refCornerHL,data.refCornerLR,hullHL,hullLR])
 
 

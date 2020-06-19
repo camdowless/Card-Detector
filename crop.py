@@ -1,39 +1,9 @@
-import random
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import numpy as np
 import cv2
-from glob import glob
-
-cardW=64
-cardH=89
-cornerXmin=1.5
-cornerXmax=9.5
-cornerYmin=2.5
-cornerYmax=23
-
-zoom=4
-cardW*=zoom
-cardH*=zoom
-cornerXmin=int(cornerXmin*zoom)
-cornerXmax=int(cornerXmax*zoom)
-cornerYmin=int(cornerYmin*zoom)
-cornerYmax=int(cornerYmax*zoom)
-
-# imgW,imgH: dimensions of the generated dataset images
-imgW=720
-imgH=720
-
-refCard=np.array([[0,0],[cardW,0],[cardW,cardH],[0,cardH]],dtype=np.float32)
-refCardRot=np.array([[cardW,0],[cardW,cardH],[0,cardH],[0,0]],dtype=np.float32)
-refCornerHL=np.array([[cornerXmin,cornerYmin],[cornerXmax,cornerYmin],[cornerXmax,cornerYmax],[cornerXmin,cornerYmax]],dtype=np.float32)
-refCornerLR=np.array([[cardW-cornerXmax,cardH-cornerYmax],[cardW-cornerXmin,cardH-cornerYmax],[cardW-cornerXmin,cardH-cornerYmin],[cardW-cornerXmax,cardH-cornerYmin]],dtype=np.float32)
-refCorners=np.array([refCornerHL,refCornerLR])
-
-
+import data
 
 bord_size=2 # bord_size alpha=0
-alphamask=np.ones((cardH,cardW),dtype=np.uint8)*255
+alphamask=np.ones((data.cardH,data.cardW),dtype=np.uint8)*255
 
 
 
@@ -77,11 +47,11 @@ def extract_card(img):
         ((xr, yr), (wr, hr), thetar) = rect
         # Determine 'Mp' the transformation that transforms 'box' into the reference rectangle
         if wr > hr:
-            Mp = cv2.getPerspectiveTransform(np.float32(box), refCard)
+            Mp = cv2.getPerspectiveTransform(np.float32(box), data.refCard)
         else:
-            Mp = cv2.getPerspectiveTransform(np.float32(box), refCardRot)
+            Mp = cv2.getPerspectiveTransform(np.float32(box), data.refCardRot)
         # Determine the warped image by applying the transformation to the image
-        imgwarp = cv2.warpPerspective(img, Mp, (cardW, cardH))
+        imgwarp = cv2.warpPerspective(img, Mp, (data.cardW, data.cardH))
         # Add alpha layer
         imgwarp = cv2.cvtColor(imgwarp, cv2.COLOR_BGR2BGRA)
 

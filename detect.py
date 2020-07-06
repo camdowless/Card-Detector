@@ -6,6 +6,7 @@ from utils import google_utils
 from utils.datasets import *
 from utils.utils import *
 
+cards = set()
 
 def detect(save_img=False):
     out, source, weights, view_img, save_txt, imgsz = \
@@ -42,7 +43,7 @@ def detect(save_img=False):
         cudnn.benchmark = True  # set True to speed up constant image size inference
         dataset = LoadStreams(source, img_size=imgsz)
     else:
-        view_img = True
+        save_img = True
         dataset = LoadImages(source, img_size=imgsz)
 
     # Get names and colors
@@ -80,6 +81,7 @@ def detect(save_img=False):
                 p, s, im0 = path, '', im0s
 
             save_path = str(Path(out) / Path(p).name)
+            print(f"saved in {save_path}")
             s += '%gx%g ' % img.shape[2:]  # print string
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  #  normalization gain whwh
             if det is not None and len(det):
@@ -89,8 +91,9 @@ def detect(save_img=False):
                 # Print results
                 for c in det[:, -1].unique():
                     n = (det[:, -1] == c).sum()  # detections per class
-                    s += '%g %ss, ' % (n, names[int(c)])  # add to string
-
+                    s += '%g %s, ' % (n, names[int(c)])  # add to string
+                    cards.add(names[int(c)])
+                
                 # Write results
                 for *xyxy, conf, cls in det:
                     if save_txt:  # Write to file
@@ -104,22 +107,30 @@ def detect(save_img=False):
                         
             # Print time (inference + NMS)
             print('%sDone. (%.3fs)' % (s, t2 - t1))
-
+            count = 0
+            low = {"2", "3", "4", "5", "6"}
+            high = {"1", "J", "Q", "K", "A" }
+            for c in cards:
+                if c[0] in low:
+                    count += 1
+                elif c[0] in high:
+                    count -= 1
+            print(count)
             # Stream results
             if view_img:
-                plt.imshow(im0)
-                plt.show()
-                """cv2.imshow(p, im0)
+                """plt.imshow(im0)
+                plt.show()"""
+                cv2.imshow(p, im0)
                 if cv2.waitKey(1) == ord('q'):  # q to quit
-                    raise StopIteration"""
+                    raise StopIteration
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', type=str, default='../last_yolov5s_results_NEW.pt', help='model.pt path')
-    parser.add_argument('--source', type=str, default='../test_vid_2.mov', help='source')  # file/folder, 0 for webcam
-    parser.add_argument('--output', type=str, default='inference/output', help='output folder')  # output folder
-    parser.add_argument('--img-size', type=int, default=288, help='inference size (pixels)')
+    parser.add_argument('--source', type=str, default='../real_test/1.jpg', help='source')  # file/folder, 0 for webcam
+    parser.add_argument('--output', type=str, default='/inference/', help='output folder')  # output folder
+    parser.add_argument('--img-size', type=int, default=416, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.1, help='object confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.5, help='IOU threshold for NMS')
     parser.add_argument('--fourcc', type=str, default='mp4v', help='output video codec (verify ffmpeg support)')

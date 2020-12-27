@@ -22,4 +22,5 @@
   - Training time takes ~24 hours, even with Google's Tesla P100 GPU. 
   - You can then evaluate the model on an image or video. 
   
-  
+   <img src="https://github.com/camdowless/Card-Detector/blob/master/p6.jpg?" width="400" height="525">
+   

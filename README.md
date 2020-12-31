@@ -8,6 +8,9 @@
   - [Darknet framework](https://pjreddie.com/darknet/)
   - [Describable Textures Dataset](https://www.robots.ox.ac.uk/~vgg/data/dtd/)
 
+`/Scripts/`:
+  - Data cleansing scripts. Used to resize & crop images and initialize variables for the data generation. 
+
 ` Data Generation.ipynb`:
   - Generates annotated training data for the machine learning model. I started by taking photos of each playing card (`/cards_og`), cropping the background out (`/cards_cropped`), and making 50 copies increasing & decreasing the brightness levels. 
   - Finds suit/value indicators in the top left, bottom right corners and draws a rectangle around them, saving the rectangle coordinates. 

@@ -9,7 +9,7 @@
   - [Describable Textures Dataset](https://www.robots.ox.ac.uk/~vgg/data/dtd/)
 
 ` Data Generation.ipynb`:
-  - Generates annotated training data for the machine learning model. I started by taking photos of each playing card, cropping the background out, and making 50 copies increasing & decreasing the brightness levels. 
+  - Generates annotated training data for the machine learning model. I started by taking photos of each playing card (`/cards_og`), cropping the background out (`/cards_cropped`), and making 50 copies increasing & decreasing the brightness levels. 
   - Finds suit/value indicators in the top left, bottom right corners and draws a rectangle around them, saving the rectangle coordinates. 
   - Takes 2 cards and an image from the DTD dataset, and places the cards in a random position. Generates an XML file containing the coordinates of the bouding boxes, the card classifications, and a unique image name. 
   - For 3 cards, they are placed in a "fanned out" position, and the same process ensues. 
